@@ -1,0 +1,10 @@
+======  Phase 4 results — autocallable: value of a 2nd instrument  ======
+premium 100.659   early-autocall prob 66.1%   put strike 70 (= barrier)
+strategy                          mean       std     CVaR99
+Deep: underlying only          -0.0073    5.0821    -6.0898
+Deep: underlying + put         -0.0034    3.5937    -5.3302
+
+Adding a vanilla put struck at the downside barrier (where the digital cliff
+and the CVaR tail live) cuts P&L std ~29% AND improves CVaR. The 2nd instrument
+supplies convexity the underlying alone cannot replicate under discrete trading.
+=======================================================================
