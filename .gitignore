@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Trained models & scratch arrays
+*.pt
+*.npz
+
+# Cached market data (regenerated on first run of phase 6)
+sp500_returns.npz
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
