@@ -1,0 +1,13 @@
+==========  Phase 5 — robustness to model misspecification  ==========
+(deep hedger trained ONLY on base Heston; premium re-pinned per world)
+world               deep std  deep CVaR |   BS std   BS CVaR  edge
+Heston base           0.8829    -2.9484 |   0.8832   -3.3818  deep
+Hi vol-of-vol         1.2848    -4.7741 |   1.3432   -5.3680  deep
+Hi skew               0.7044    -2.1922 |   0.7234   -2.6573  deep
+Hi vol level          1.1416    -4.5333 |   1.2675   -5.2975  deep
+Merton jumps          1.3872    -7.9901 |   1.4246   -8.5742  deep
+
+Deep hedger keeps its CVaR edge over constant-vol BS delta across every
+parameter shift AND under jumps it never trained on -> the learned hedge is
+robust, not overfit to one calibration.
+======================================================================
