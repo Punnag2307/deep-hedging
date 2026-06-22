@@ -1,0 +1,13 @@
+==========  Phase 2 results — Heston, zero cost  ==========
+premium (Heston MC): 3.1117
+strategy                     std     CVaR99
+BS delta (const vol)      0.8832    -3.3834
+Deep (no vol feat)        0.8828    -2.9507
+Deep (+ vol feat)         0.8995    -3.0773
+
+Deep hedger beats constant-vol BS delta on CVaR in the incomplete market,
+by learning the Heston-appropriate hedge ratio. The realized-vol proxy does
+NOT help (slightly hurts): the edge is structural, not vol-timing. Both stds
+(~0.88) far exceed the complete-market case (~0.36) because volatility risk
+is UN-hedgeable with the underlying alone -> motivates a 2nd instrument (Phase 4).
+===========================================================
