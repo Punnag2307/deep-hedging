@@ -1,0 +1,10 @@
+================  Phase 0 (v2) — converged  ================
+strategy            mean       std     CVaR99
+BS delta         +0.0003    0.3568    -1.2217
+Deep (MSE)       +0.0009    0.3913    -1.2558
+Deep (CVaR)      +0.0015    0.4463    -1.0646
+
+delta recovery (CVaR): corr 0.9919   MAE 0.0340
+===========================================================
+Read: MSE ~ matches BS-delta std but worst tail; CVaR accepts a
+little more std to buy the best 99% tail. The 'gap' is the objective.
