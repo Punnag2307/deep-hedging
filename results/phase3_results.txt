@@ -1,0 +1,10 @@
+========  Phase 3 results — up-&-out barrier (GBM, zero cost)  ========
+premium 1.1219   knockout prob 19.2%
+strategy                    mean       std     CVaR99
+Vanilla BS delta         -0.0245    4.2986    -3.8079
+Deep hedge (barrier)     +0.0046    1.6111    -3.3398
+
+The barrier-ignorant vanilla delta piles into long stock toward the barrier;
+the deep hedger learns to de-risk and go SHORT near B (the sign-flipping
+barrier delta), cutting P&L std ~2.7x and beating it on CVaR.
+======================================================================
