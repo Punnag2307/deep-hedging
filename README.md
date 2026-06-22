@@ -58,7 +58,11 @@ no knowledge of the BS formula — the network **recovers the delta hedge**
 *MSE-trained* baseline makes the objective concrete: the MSE (variance-minimising)
 net matches the BS-delta std but has the worst tail, while the CVaR net accepts
 slightly more variance to buy the best 99% tail. The "gap" is the objective, not a
-bug. *Plots: `phase0_delta.png`, `phase0_pnl.png`.*
+bug.
+
+![Trained on a pure CVaR objective with no pricing formula, the network recovers the Black–Scholes delta](results/phase0_delta.png)
+
+*Also in `results/`: `phase0_pnl.png`.*
 
 ### Phase 1 — Transaction costs and the no-trade band (`deep_hedging_phase1.py`)
 A proportional cost `c·S·|Δposition|` enters the P&L. Two clean results: turnover
@@ -69,7 +73,11 @@ hard-coding it. The deep hedger beats BS delta on cost-adjusted CVaR through ~50
 bps. *Honest caveat:* at an extreme 1% cost the 99%-tail optimisation lags BS
 delta within a practical budget (the strong cost-reduction gradient overwhelms the
 sparse tail gradient) — a real property of minibatch-CVaR, documented rather than
-hidden. *Plots: `phase1_band.png`, `phase1_sweep.png`, `phase1_pnl.png`.*
+hidden.
+
+![A no-trade band emerges around the target delta and widens as transaction cost rises](results/phase1_band.png)
+
+*Also in `results/`: `phase1_sweep.png` (cost sweep), `phase1_pnl.png`.*
 
 ### Phase 2 — Incomplete market under Heston (`deep_hedging_phase2.py`)
 With stochastic volatility the market is incomplete: the option carries vol risk
@@ -79,7 +87,9 @@ hedge ratio. At zero cost the deep hedger beats it on CVaR (−2.95 vs −3.38).
 edge is structural (the network learns the Heston-appropriate hedge ratio), not
 volatility-regime timing. Both stds (~0.88) dwarf the complete-market 0.36 because
 vol risk is un-hedgeable with the underlying alone — motivating Phase 4's second
-instrument. *Plot: `phase2_pnl.png`.*
+instrument.
+
+![Hedged P&L under Heston: the deep hedger vs the constant-vol BS delta](results/phase2_pnl.png)
 
 ### Phase 3 — Knock-out barrier (`deep_hedging_phase3.py`)
 An up-&-out call: near the barrier the true delta flips sign and explodes. A
@@ -87,8 +97,11 @@ hedger using the plain vanilla delta piles into long stock right where the optio
 is about to vanish; its P&L is bimodal (it gambles, std 4.30). The deep hedger,
 trained on the knock-out payoff, learns to **de-risk and go short** as the spot
 approaches the barrier — the sign-flipping barrier delta, learned from scratch —
-cutting std 2.7× to 1.61 and improving CVaR. *Plots: `phase3_policy.png`,
-`phase3_pnl.png`.*
+cutting std 2.7× to 1.61 and improving CVaR.
+
+![The learned policy flips sign and de-risks as spot approaches the knock-out barrier](results/phase3_policy.png)
+
+*Also in `results/`: `phase3_pnl.png`.*
 
 ### Phase 4 — Autocallable with a second instrument (`deep_hedging_phase4.py`)
 A single-underlying autocallable note (quarterly early redemption + a downside
@@ -98,7 +111,11 @@ vanilla put as a second instrument cuts std to 3.59 (−29%) and improves CVaR. 
 strike matters: a put away from the tail lowered std but *worsened* CVaR;
 diagnosing that the CVaR tail lives at the downside barrier and moving the put
 there fixed both. The hedger actively trades the option, with a position that
-jumps at the autocall level. *Plots: `phase4_putpos.png`, `phase4_pnl.png`.*
+jumps at the autocall level.
+
+![The hedger actively trades the second instrument, with a position that jumps at the autocall level](results/phase4_putpos.png)
+
+*Also in `results/`: `phase4_pnl.png`.*
 
 ### Phase 5 — Robustness to model misspecification (`deep_hedging_phase5.py`)
 The Phase 2 hedger is trained on a single Heston calibration, then its *fixed*
@@ -107,7 +124,9 @@ stronger skew, a higher vol regime, and a Merton jump-diffusion. With the premiu
 re-pinned per world (so we measure hedging, not pricing), the deep hedger keeps
 its CVaR *and* std edge over constant-vol BS delta in **every** world, including
 the jump crashes. The learned hedge generalises rather than overfitting to one
-calibration. *Plot: `phase5_robustness.png`.*
+calibration.
+
+![Trained on one Heston calibration, the deep hedger keeps its edge over BS delta across every stressed world](results/phase5_robustness.png)
 
 ### Phase 6 — Empirical tail-risk hedging under market impact (`deep_hedging_phase6.py`)
 The production-shaped capstone. It drops three simulator-era assumptions at once:
@@ -124,7 +143,9 @@ training volatility, never seen) it ties the constant-vol BS delta on the extrem
 still does so at half the turnover and with lower std. Closing that crisis tail is
 exactly what gamma/options hedging (Phase 4) on real data would address.
 Evaluation is walk-forward (train/test split by date), with a hedge-latency
-benchmark (~0.2 µs/decision on CPU). *Plot: `phase6_pnl.png`.*
+benchmark (~0.2 µs/decision on CPU).
+
+![Out-of-sample and 2008-crisis P&L on real S&P 500 data: deep hedger vs BS delta](results/phase6_pnl.png)
 
 ---
 
